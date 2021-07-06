@@ -20,12 +20,13 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.CompareTag("Enemy") || other.CompareTag("Boss"))
         {
-            SoundPlayer.instance.PlaySound("Obj_Dmg_on_1");
+            //SoundPlayer.instance.PlaySound("Obj_Dmg_on_1");
 
             _particleManager?.ShowParticle(ParticleKind.Hit2, other.transform.position);
-            _particleManager?.ShowParticle(ParticleKind.Hit, other.transform.position, GetRot());
+            if (other.CompareTag("Enemy"))
+                _particleManager?.ShowParticle(ParticleKind.Hit, other.transform.position, GetRot());
         }
         if (other.CompareTag("Wall") || other.CompareTag("Grass"))
         {

@@ -160,6 +160,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attackCollider: {fileID: 7599472296171787218}
   _particle: {fileID: 2429189459222090547}
+  _hp: 5
 --- !u!50 &7599472296655777605
 Rigidbody2D:
   serializedVersion: 4
@@ -255,7 +256,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 0.1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}

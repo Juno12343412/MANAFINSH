@@ -54,7 +54,11 @@ public class SpecialItem : AIMachine
 
         GetComponent<CinemachineImpulseSource>().GenerateImpulse();
 
-        _playerManager._stats.IsDash = true;
+        if (name == "DashItem")
+            _playerManager._stats.IsDash = true;
+        else if (name == "SlashItem")
+            _playerManager._stats.IsSlash = true;
+
         _particleManager.ShowParticle(ParticleKind.Explosion, transform.position, null, 1);
 
         gameObject.SetActive(false);

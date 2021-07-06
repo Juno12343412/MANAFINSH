@@ -19,6 +19,7 @@ TagManager:
   - Pattern2
   - Grass
   - Boss
+  - SkillAttack
   layers:
   - Default
   - TransparentFX

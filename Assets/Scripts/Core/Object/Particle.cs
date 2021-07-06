@@ -22,6 +22,11 @@ public class Particle : PoolingObject
             var v = _particles[(int)_kind]?.transform.GetChild(0);
             v.localEulerAngles = _particles[(int)_kind].transform.localEulerAngles;
         }
+        else if (_kind == ParticleKind.Skill)
+        {
+            var v = _particles[(int)_kind]?.transform.GetChild(0);
+            v.localEulerAngles = GameObject.FindGameObjectWithTag("Player").GetComponent<SpriteRenderer>().flipX == true ? new Vector3(0, -180, 0) : new Vector3(0, 0f, 0);
+        }
 
         Invoke("Release", 1f);
     }

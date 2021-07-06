@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Ingame_Scene.unity
     guid: 58d49088f6704d1488f55f6d587a3872
+  - enabled: 1
+    path: Assets/Scenes/Ending_Scene.unity
+    guid: b7c91a23dc5860e4d83901d61b9964c9
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 213ad397956f0834e85c606afb1901fe,
       type: 2}

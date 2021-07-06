@@ -6,6 +6,7 @@ using UDBase.Controllers.ObjectSystem;
 using UDBase.Controllers.LogSystem;
 using UDBase.Controllers.ParticleSystem;
 using Cinemachine;
+using UDBase.Utils;
 using MANA.Enums;
 using Manager.Sound;
 using Zenject;
@@ -34,6 +35,7 @@ public class Player : PlayerMachine
 
     bool isStart = false;
     bool isDash = false;
+    public bool isHit = false;
     public bool isGrand = true;
 
     [Inject]
@@ -109,6 +111,7 @@ public class Player : PlayerMachine
                 _renderer.flipX = x == 1 ? false : true;
 
                 _attackColiders[0].GetComponent<BoxCollider2D>().offset = new Vector2(x, 0);
+                _attackColiders[1].GetComponent<BoxCollider2D>().offset = new Vector2(x, 0);
 
                 _rigid2D.velocity += new Vector2(x, 0) * _player._stats.MoveSpeed * 0.5f;
 
@@ -192,9 +195,9 @@ public class Player : PlayerMachine
         if (!isStart || _player._stats.IsEvent)
             return;
 
-        if (_player._stats.IsJump)
+        if (_player._stats.IsSlash && _player._stats.SpecialAttackDuration >= 50f)
         {
-            _player._stats.State = PlayerState.Idle;
+            Slash();
             return;
         }
     }
@@ -274,16 +277,21 @@ public class Player : PlayerMachine
             _animtor.SetBool("isWalk", false);
             _animtor.SetBool("isAttack", false);
             _animtor.SetBool("isDash", false);
+            _animtor.SetBool("isSkill", false);
             _animtor.SetBool("isHurt", false);
             _animtor.SetInteger("Jump", 0);
             _player._stats.IsJump = false;
             _player._stats.IsAttack = false;
             _attackColiders[0].gameObject.SetActive(false);
+            _attackColiders[1].gameObject.SetActive(false);
+
+            Invoke("Hit", 1f);
         }
         else
         {
             _player._stats.IsAttack = false;
             _attackColiders[0].gameObject.SetActive(false);
+            _attackColiders[1].gameObject.SetActive(false);
 
             //if (_animtor.GetInteger("Jump") == 2)
             //{
@@ -296,7 +304,17 @@ public class Player : PlayerMachine
             _animtor.SetInteger("AttackY", 0);
             _animtor.SetBool("isHurt", false);
             _animtor.SetBool("isDash", false);
+            _animtor.SetBool("isSkill", false);
+
+            isHit = false;
+
+            Invoke("Hit", 1f);
         }
+    }
+
+    void Hit()
+    {
+        _animtor.SetBool("isHurt", false);
     }
 
     IEnumerator GradientCheck()
@@ -413,49 +431,61 @@ public class Player : PlayerMachine
 
         Vector3 temp = other.transform.position - transform.position;
         temp = temp.normalized;
-        if (other.gameObject.CompareTag("EnemyAttack") && !_animtor.GetBool("isHurt"))
+
+        if (!isDash && !isHit)
         {
-            SoundPlayer.instance.PlaySound("Obj_dmg_on_2");
+            if (other.gameObject.CompareTag("EnemyAttack") && !_animtor.GetBool("isHurt"))
+            {
+                SoundPlayer.instance.PlaySound("Obj_dmg_on_2");
 
-            other.gameObject.SetActive(false);
+                other.gameObject.SetActive(false);
 
-            GetComponent<CinemachineImpulseSource>().GenerateImpulse();
+                GetComponent<CinemachineImpulseSource>().GenerateImpulse();
 
-            _rigid2D.AddForce(new Vector2(-temp.x, 0f) * 5f, ForceMode2D.Impulse);
+                _rigid2D.AddForce(new Vector2(-temp.x, 0f) * 5f, ForceMode2D.Impulse);
 
-            _animtor.SetBool("isHurt", true);
-            _playerHitFX.color = new Color(_playerHitFX.color.r, _playerHitFX.color.g, _playerHitFX.color.b, 20.0f / 255.0f);
+                _animtor.SetBool("isHurt", true);
+                isHit = true;
+                Invoke("HitEnd", 1f);
 
-            if (_player._stats.CurHP > 0)
-                _player._stats.CurHP -= 1;
-        }
-        if (other.gameObject.CompareTag("Pattern1"))
-        {
-            SoundPlayer.instance.PlaySound("Obj_dmg_on_2");
+                _playerHitFX.color = new Color(_playerHitFX.color.r, _playerHitFX.color.g, _playerHitFX.color.b, 20.0f / 255.0f);
 
-            other.gameObject.SetActive(false);
+                if (_player._stats.CurHP > 0)
+                    _player._stats.CurHP -= 1;
+            }
+            if (other.gameObject.CompareTag("Pattern1"))
+            {
+                SoundPlayer.instance.PlaySound("Obj_dmg_on_2");
 
-            GetComponent<CinemachineImpulseSource>().GenerateImpulse();
+                other.gameObject.SetActive(false);
 
-            _animtor.SetBool("isHurt", true);
-            _playerHitFX.color = new Color(_playerHitFX.color.r, _playerHitFX.color.g, _playerHitFX.color.b, 20.0f / 255.0f);
+                GetComponent<CinemachineImpulseSource>().GenerateImpulse();
 
-            if (_player._stats.CurHP > 0)
-                _player._stats.CurHP -= 1;
-        }
-        if (other.gameObject.CompareTag("Pattern2"))
-        {
-            SoundPlayer.instance.PlaySound("Obj_dmg_on_2");
+                _animtor.SetBool("isHurt", true);
+                isHit = true;
+                Invoke("HitEnd", 1f);
 
-            other.gameObject.SetActive(false);
+                _playerHitFX.color = new Color(_playerHitFX.color.r, _playerHitFX.color.g, _playerHitFX.color.b, 20.0f / 255.0f);
 
-            GetComponent<CinemachineImpulseSource>().GenerateImpulse();
-            _rigid2D.AddForce(new Vector2(-temp.x, 0f) * 10f, ForceMode2D.Impulse);
-            _animtor.SetBool("isHurt", true);
-            _playerHitFX.color = new Color(_playerHitFX.color.r, _playerHitFX.color.g, _playerHitFX.color.b, 20.0f / 255.0f);
+                if (_player._stats.CurHP > 0)
+                    _player._stats.CurHP -= 1;
+            }
+            if (other.gameObject.CompareTag("Pattern2"))
+            {
+                SoundPlayer.instance.PlaySound("Obj_dmg_on_2");
 
-            if (_player._stats.CurHP > 0)
-                _player._stats.CurHP -= 1;
+                other.gameObject.SetActive(false);
+
+                GetComponent<CinemachineImpulseSource>().GenerateImpulse();
+                _rigid2D.AddForce(new Vector2(-temp.x, 0f) * 10f, ForceMode2D.Impulse);
+                _animtor.SetBool("isHurt", true);
+                isHit = true;
+                Invoke("HitEnd", 1f);
+                _playerHitFX.color = new Color(_playerHitFX.color.r, _playerHitFX.color.g, _playerHitFX.color.b, 20.0f / 255.0f);
+
+                if (_player._stats.CurHP > 0)
+                    _player._stats.CurHP -= 1;
+            }
         }
 
         if (other.gameObject.CompareTag("Grass"))
@@ -463,6 +493,11 @@ public class Player : PlayerMachine
             _particleManager?.ShowParticle(ParticleKind.Obs, transform.position);
             SoundPlayer.instance.PlaySound("Map_leaf_1", 0.2f);
         }
+    }
+
+    void HitEnd()
+    {
+        isHit = false;
     }
 
     public void StartEvent()
@@ -474,6 +509,37 @@ public class Player : PlayerMachine
 
         _animtor.enabled = true;
         _animtor.SetBool("isStart", true);
+    }
+
+    public void SlashSound()
+    {
+        SoundPlayer.instance.PlaySound("Map_explosion", 0.5f);
+
+        _particleManager?.ShowParticle(ParticleKind.Skill, transform.position);
+
+        _player._stats.SpecialAttackDuration -= 50f;
+
+        if (_player._stats.SpecialAttackDuration <= 0f)
+            _player._stats.SpecialAttackDuration = 0f;
+
+        GetComponent<CinemachineImpulseSource>().GenerateImpulse();
+
+        _animtor.SetBool("isSkill", false);
+        _attackColiders[1].gameObject.SetActive(true);
+        Invoke("EndCollider", 1f);
+    }
+
+    void EndCollider()
+    {
+        _attackColiders[1].gameObject.SetActive(false);
+        _animtor.SetBool("isSkill", false);
+        _animtor.SetBool("isDash", false);
+    }
+
+    void Slash()
+    {
+        SoundPlayer.instance.PlaySound("P_dash", 0.5f);
+        _animtor.SetBool("isSkill", true);
     }
 
     void Dash(Vector2 _dir)

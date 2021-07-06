@@ -82,7 +82,7 @@
         Obs, Obs2,
         Explosion, Explosion2,
         Dash, Dash2, Dash3,
-        Boss,
+        Boss, Skill,
         NONE = 99
     }
 }

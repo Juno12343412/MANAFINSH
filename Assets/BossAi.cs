@@ -10,6 +10,7 @@ using Cinemachine;
 using Manager.Sound;
 using MANA.Enums;
 using Zenject;
+using UnityEngine.SceneManagement;
 
 enum BossState
 {
@@ -32,12 +33,14 @@ public class BossAi : MonoBehaviour
     [SerializeField] private BoxCollider2D _PatternCollider3;
     [SerializeField] private Material _HitMaterial;
     [Header("Boss Stats")]
-    [SerializeField] private float hp = 5.0f;
+    [SerializeField] private float hp = 100.0f;
     [SerializeField] private float _Speed = 5.0f;
     [SerializeField] private float _delay = 1.0f;
     [SerializeField] private float _groggyDelay = 2.0f;
     [Header("Boss Signal")]
     [SerializeField] private GameObject wallHitSignal;
+
+    [SerializeField] private GameObject FadeObj;
 
     Animator _animtor;
     SpriteRenderer _renderer;
@@ -51,12 +54,13 @@ public class BossAi : MonoBehaviour
     bool pattern1Dis = false;
     int groggyCount = 0;
     bool pattern3End = false;
-    
+
     Vector3 start;
     Vector3 target;
     float heightArc;
     float bestY = -10;
     bool search = false;
+    bool isHit = false;
 
     [Inject]
     readonly ParticleManager _pm;
@@ -136,7 +140,7 @@ public class BossAi : MonoBehaviour
         _animtor.SetInteger("Pattern", 3);
 
         pattern3End = true;
-        start = new Vector3(transform.position.x , -6.35658f, 1);
+        start = new Vector3(transform.position.x, -6.35658f, 1);
         target = new Vector3(targetObj.transform.position.x, start.y, 1);
         heightArc = Vector3.Distance(start, target) * 0.65f;
         bestY = -10.0f;
@@ -153,7 +157,7 @@ public class BossAi : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Attack") && state != BossState.HitWall)
+        if ((other.gameObject.CompareTag("SkillAttack") || other.gameObject.CompareTag("Attack")) && state != BossState.HitWall)
         {
             Hurt(other.gameObject);
             SoundPlayer.instance.PlaySound("Obj_dmg_on_2");
@@ -188,16 +192,33 @@ public class BossAi : MonoBehaviour
 
     void Hurt(GameObject obj)
     {
+        if (isHit)
+            return;
+
         GetComponent<CinemachineImpulseSource>().GenerateImpulse();
 
         obj.SetActive(false);
+        isHit = true;
 
-        hp -= 1;
+        Debug.Log("데미지 들어옴");
+
+        if (obj.CompareTag("SkillAttack"))
+            hp -= 5;
+        else if (obj.CompareTag("Attack"))
+            hp -= 1;
+
         StartCoroutine(CR_HitFx());
         if (state != BossState.Dead)
         {
             StartCoroutine(TimeUtils.TimeStop(0.05f));
         }
+
+        Invoke("HitEnd", 1f);
+    }
+
+    void HitEnd()
+    {
+        isHit = false;
     }
 
     IEnumerator CR_HitFx()
@@ -374,6 +395,26 @@ public class BossAi : MonoBehaviour
     public void BossGroggy()
     {
         SoundPlayer.instance.PlaySound("Boss_groggy");
+    }
+
+    public void BossDead()
+    {
+        _pm.ShowParticle(ParticleKind.Move, transform.position, null, 20);
+        SoundPlayer.instance.PlaySound("Bs_atk2_cresh");
+        GetComponent<CinemachineImpulseSource>().GenerateImpulse();
+        Invoke("EndGame", 15f);
+    }
+
+    void EndGame()
+    {
+        SoundPlayer.instance.StopBGM();
+        FadeObj.SetActive(true);
+        Invoke("FadeEnd", 2f);
+    }
+
+    void FadeEnd()
+    {
+        SceneManager.LoadScene(1);
     }
 
     void FixedUpdate()

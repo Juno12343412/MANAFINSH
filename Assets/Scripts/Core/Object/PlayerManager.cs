@@ -95,6 +95,11 @@ namespace UDBase.Controllers.ObjectSystem
             public bool IsDash;
 
             /// <summary>
+            /// 대쉬를 가지고 있는가 ?
+            /// </summary>
+            public bool IsSlash;
+
+            /// <summary>
             /// 현재 이벤트를 진행중인가 ?
             /// </summary>
             public bool IsEvent;

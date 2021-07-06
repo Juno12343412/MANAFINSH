@@ -187,7 +187,7 @@ public class AI : AIMachine
 
     protected override void AnimFrameStart()
     {
-        SoundPlayer.instance.PlaySound("E1_walk");
+        //SoundPlayer.instance.PlaySound("E1_walk");
     }
 
     protected override void AnimFrameUpdate()
@@ -276,7 +276,7 @@ public class AI : AIMachine
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.CompareTag("Attack") && !_animtor.GetBool("isHurt") && !IsDead())
+        if ((other.gameObject.CompareTag("SkillAttack") || other.gameObject.CompareTag("Attack")) && !_animtor.GetBool("isHurt") && !IsDead())
         {
             GetComponent<CinemachineImpulseSource>().GenerateImpulse();
 
@@ -287,7 +287,11 @@ public class AI : AIMachine
             MyStats.IsAttack = false;
 
             SoundPlayer.instance.PlaySound("Obj_dmg_on_1");
-            MyStats.CurHP -= 1;
+            
+            if (other.gameObject.CompareTag("SkillAttack"))
+                MyStats.CurHP -= 5;
+            else
+                MyStats.CurHP -= 1;
 
             if (IsDead())
             {

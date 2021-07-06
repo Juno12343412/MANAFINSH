@@ -66,7 +66,7 @@ namespace UDBase.Controllers.ObjectSystem {
             
             playerKeys.Add("Attack", new KeySetting(KeyCode.Z, AttackEvent, KeyKind.Down));
             playerKeys.Add("SpecialAttack", new KeySetting(KeyCode.X, SpecialAttackEvent, KeyKind.Down));
-
+            
             playerKeys.Add("Jump1", new KeySetting(KeyCode.C, JumpEvent, KeyKind.Down));
             playerKeys.Add("Jump2", new KeySetting(KeyCode.Space, JumpEvent, KeyKind.Down));
 
