@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - Opacity background
+  - Stone
+  - Ground
+  - Attack
+  - EnemyAttack
+  - Enemy
+  - Wreck
+  - Wall
+  - Item
+  - Action
+  - BossRange
+  - Pattern1
+  - Pattern2
+  - Grass
+  - Boss
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - MapLock
+  - Ground
+  - Player
+  - PlayerAttack
+  - Portal
+  - Stone
+  - Far
+  - Mid
+  - Near
+  - Enemy
+  - EnemyAttack
+  - Wreck
+  - BossRange
+  - Wall
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Far
+    uniqueID: 2026619569
+    locked: 0
+  - name: Mid
+    uniqueID: 1393068147
+    locked: 0
+  - name: Ground
+    uniqueID: 1058211121
+    locked: 0
+  - name: Particle
+    uniqueID: 3746886689
+    locked: 0
+  - name: Player
+    uniqueID: 2554175495
+    locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: Near
+    uniqueID: 495781107
+    locked: 0
+  - name: Ui
+    uniqueID: 1917124705
+    locked: 0
