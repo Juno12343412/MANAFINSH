@@ -105,6 +105,11 @@ namespace UDBase.Controllers.ObjectSystem
             public bool IsEvent;
 
             /// <summary>
+            /// 현재 무적 ?
+            /// </summary>
+            public bool IsMoo;
+
+            /// <summary>
             /// 현재 액셩을 진행중인가 ?
             /// </summary>
             public bool IsAction;

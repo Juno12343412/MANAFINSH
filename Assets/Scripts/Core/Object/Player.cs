@@ -10,6 +10,7 @@ using UDBase.Utils;
 using MANA.Enums;
 using Manager.Sound;
 using Zenject;
+using UnityEngine.SceneManagement;
 
 public class Player : PlayerMachine
 {
@@ -122,7 +123,7 @@ public class Player : PlayerMachine
                 else if (_rigid2D.velocity.x < -_player._stats.MoveSpeed)
                     _rigid2D.velocity = new Vector2(-_player._stats.MoveSpeed, _rigid2D.velocity.y);
 
-                if (Input.GetKeyDown(KeyCode.DownArrow) && _player._stats.IsDash && _player._stats.SpecialAttackDuration >= 20f)
+                if ((Input.GetKeyDown(KeyCode.LeftShift) || Input.GetKeyDown(KeyCode.RightShift)) && _player._stats.IsDash && _player._stats.SpecialAttackDuration >= 20f)
                 {
                     _particleManager.ShowParticle(ParticleKind.Move, transform.position, null, 20);
                     Dash(new Vector2(x, 0));
@@ -208,8 +209,18 @@ public class Player : PlayerMachine
 
         if (!isStart || _player._stats.IsEvent)
             return;
+        _animtor.SetBool("isDead", true);
     }
 
+    public void DeadSceneGOGO()
+    {
+        StartCoroutine(CR_DeadSIbal());
+    }
+    IEnumerator CR_DeadSIbal()
+    {
+        yield return new WaitForSeconds(2.0f);
+        SceneManager.LoadScene(1);
+    }
     IEnumerator Combo(float time = 0f)
     {
         bool attack = false;
@@ -397,6 +408,7 @@ public class Player : PlayerMachine
                 _animtor.SetInteger("Jump", 0);
                 _player._stats.IsJump = false;
                 _animtor.SetBool("isWalk", false);
+                _animtor.SetBool("isAttack", false);
                 _animtor.SetBool("isStart", true);
                 _attackColiders[0].gameObject.SetActive(false);
                 isStart = false;
@@ -432,7 +444,7 @@ public class Player : PlayerMachine
         Vector3 temp = other.transform.position - transform.position;
         temp = temp.normalized;
 
-        if (!isDash && !isHit)
+        if (!isDash && !isHit && !_player._stats.IsMoo)
         {
             if (other.gameObject.CompareTag("EnemyAttack") && !_animtor.GetBool("isHurt"))
             {

@@ -37,6 +37,7 @@ public class BossAi : MonoBehaviour
     [SerializeField] private float _Speed = 5.0f;
     [SerializeField] private float _delay = 1.0f;
     [SerializeField] private float _groggyDelay = 2.0f;
+    [SerializeField] private int _maxGroggy = 6;
     [Header("Boss Signal")]
     [SerializeField] private GameObject wallHitSignal;
 
@@ -279,7 +280,7 @@ public class BossAi : MonoBehaviour
         {
             Idle();
         }
-        else if (groggyCount == 6)
+        else if (groggyCount == _maxGroggy)
         {
             Groggy();
         }

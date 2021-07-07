@@ -46,13 +46,13 @@ public class TextBox : MonoBehaviour, ILogContext
 
         _talkKeys = new Dictionary<string, KeySetting>();
 
-        _talkKeys.Add("Next", new KeySetting(KeyCode.Q, Next, KeyKind.Down));
+        _talkKeys.Add("Next", new KeySetting(KeyCode.F, Next, KeyKind.Down));
         _talkKeys.Add("LA", new KeySetting(KeyCode.LeftArrow, Left_Select, KeyKind.Down));
         _talkKeys.Add("RA", new KeySetting(KeyCode.RightArrow, Right_Select, KeyKind.Down));
         _talkKeys.Add("L", new KeySetting(KeyCode.A, Left_Select, KeyKind.Down));
         _talkKeys.Add("R", new KeySetting(KeyCode.D, Right_Select, KeyKind.Down));
-        _talkKeys.Add("Accept1", new KeySetting(KeyCode.Return, Accept, KeyKind.Down));
-        _talkKeys.Add("Accept2", new KeySetting(KeyCode.Space, Accept, KeyKind.Down));
+        _talkKeys.Add("Accept1", new KeySetting(KeyCode.F, Accept, KeyKind.Down));
+        _talkKeys.Add("Accept2", new KeySetting(KeyCode.F, Accept, KeyKind.Down));
     }
 
     void Update()
@@ -132,11 +132,10 @@ public class TextBox : MonoBehaviour, ILogContext
         }
         else if (_talkList.Count > _curText && _talkList[_curText].Contains("[Interaction]"))
         {
-
             // 기본
             if (_textState == 1)
             {
-                _isInteraction = true;
+                Invoke("WaitInteraction", 1f);
 
                 _ui.Hide("TextUI_SkipText3");
                 _ui.Hide("TextUI_SmallBox");
@@ -200,6 +199,11 @@ public class TextBox : MonoBehaviour, ILogContext
             Invoke("TalkEnd", 0.1f);
         }
     }
+    
+    void WaitInteraction()
+    {
+        _isInteraction = true;
+    }
 
     void Left_Select()
     {
@@ -248,14 +252,6 @@ public class TextBox : MonoBehaviour, ILogContext
             _talkList = _noTalkList;
             Next();
         }
-    }
-
-    void Skip()
-    {
-        //if (!_markObj.activeSelf)
-        //    _markObj.SetActive(true);
-
-        _textState = 1;
     }
 
     public void TalkEnd()

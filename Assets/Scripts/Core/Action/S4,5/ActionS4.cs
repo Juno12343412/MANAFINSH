@@ -73,7 +73,7 @@ public class ActionS4 : ActionEvent
             return false;
         });
 
-        Delay(3f);
+        Delay(1.5f);
 
         AddAction(() =>
         {

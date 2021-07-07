@@ -42,11 +42,21 @@ namespace UDBase.Controllers.ObjectSystem {
             foreach (var key in playerKeys)
                 key.Value.Update();
 
-            //if (IsDead()) {
+            if(Input.GetKeyDown(KeyCode.F1))
+            {
+                if (_player._stats.CurHP != _player._stats.MaxHP)
+                    _player._stats.CurHP++;
+            }
+            if (Input.GetKeyDown(KeyCode.F2))
+            {
+                _player._stats.IsMoo = !_player._stats.IsMoo;
+            }
+            if (IsDead())
+            {
 
-            //    MyStats.State = PlayerState.Dead;
-            //    DeadEvent();
-            //}
+                _player._stats.State = PlayerState.Dead;
+                DeadEvent();
+            }
         }
 
         /// <summary>

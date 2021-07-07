@@ -237,10 +237,10 @@ public class AI : AIMachine
         {
             yield return new WaitForSeconds(1f);
             _animtor.SetBool("isAttack", true);
-            _attackCollider.SetActive(true);
+            //_attackCollider.SetActive(true);
             yield return new WaitForSeconds(0.05f);
             SoundPlayer.instance.PlaySound("E1_atk");
-            _attackCollider.SetActive(false);
+            //_attackCollider.SetActive(false);
             yield return new WaitForSeconds(1.5f);
             MyStats.IsAttack = false;
         }
