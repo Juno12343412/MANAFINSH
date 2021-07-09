@@ -295,6 +295,8 @@ public class AI2 : AIMachine
             _attackCollider.SetActive(false);
             MyStats.IsAttack = false;
 
+            _animtor.SetBool("isHurt", true);
+
             SoundPlayer.instance.PlaySound("Obj_dmg_on_1");
 
             if (other.gameObject.CompareTag("SkillAttack"))
