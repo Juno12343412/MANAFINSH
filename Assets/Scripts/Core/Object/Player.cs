@@ -34,10 +34,11 @@ public class Player : PlayerMachine
     private Animator _animtor;
     private Rigidbody2D _rigid2D;
 
-    bool isStart = false;
+    public bool isStart = false;
     bool isDash = false;
     public bool isHit = false;
     public bool isGrand = true;
+    public bool isDrop = false;
 
     [Inject]
     readonly ParticleManager _particleManager;
@@ -185,7 +186,9 @@ public class Player : PlayerMachine
         if (_attackDir.y != 0)
             _attackColiders[0].GetComponent<BoxCollider2D>().offset = new Vector2(0, _attackDir.y);
 
-        _animtor.SetBool("isAttack", true);
+        if (!_animtor.GetBool("isAttack"))
+            _animtor.SetBool("isAttack", true);
+
         _animtor.SetFloat("AttackY", _attackDir.y);
     }
 
@@ -283,8 +286,8 @@ public class Player : PlayerMachine
             Debug.Log("Start");
 
             _animtor.SetBool("isStart", false);
-            isGrand = false;
             isStart = true;
+            isGrand = false;
             _animtor.SetBool("isWalk", false);
             _animtor.SetBool("isAttack", false);
             _animtor.SetBool("isDash", false);
@@ -335,9 +338,9 @@ public class Player : PlayerMachine
         float progress = 0f;
         yield return null;
 
-        while (progress <= 1.5f && _player._stats.IsJump)
+        while (progress <= 1f && _player._stats.IsJump)
         {
-            if (progress >= 0.2f)
+            if (progress >= 0.1f)
                 _animtor.SetInteger("Jump", 2);
 
             progress += Time.deltaTime;
@@ -393,6 +396,8 @@ public class Player : PlayerMachine
             {
                 if (_rigid2D.velocity.y <= 0.1f)
                 {
+                    StopCoroutine("GradientCheck");
+
                     _animtor.SetBool("isWalk", false);
                     _animtor.SetBool("isAttack", false);
                     _animtor.SetInteger("Jump", 0);
@@ -401,6 +406,16 @@ public class Player : PlayerMachine
                     _particleManager?.ShowParticle(ParticleKind.Move, transform.position, null, 10);
                     _attackColiders[0].gameObject.SetActive(false);
                 }
+                //StopCoroutine("GradientCheck");
+
+                //_animtor.SetBool("isWalk", false);
+                //_animtor.SetBool("isAttack", false);
+                ////_animtor.SetInteger("Jump", 0);
+                ////_player._stats.IsJump = false;
+                //_player._stats.IsAttack = false;
+                //_particleManager?.ShowParticle(ParticleKind.Move, transform.position, null, 10);
+                //_attackColiders[0].gameObject.SetActive(false);
+                //isDrop = false;
             }
             else
             {
@@ -412,6 +427,7 @@ public class Player : PlayerMachine
                 _animtor.SetBool("isStart", true);
                 _attackColiders[0].gameObject.SetActive(false);
                 isStart = false;
+                isDrop = false;
 
                 _particleManager?.ShowParticle(ParticleKind.Move, transform.position, null, 30);
             }
@@ -517,7 +533,7 @@ public class Player : PlayerMachine
         if (_isStart)
             return;
 
-        isStart = true;
+        //isStart = true;
 
         _animtor.enabled = true;
         _animtor.SetBool("isStart", true);

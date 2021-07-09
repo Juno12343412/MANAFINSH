@@ -24,7 +24,6 @@ enum BossState
     End
 }
 
-
 public class BossAi : MonoBehaviour
 {
 

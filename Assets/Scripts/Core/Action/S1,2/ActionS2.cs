@@ -65,6 +65,7 @@ public class ActionS2 : ActionEvent
             if (TextBox.instance.isTalkEnd)
             {
                 TextBox.instance.isTalkEnd = false;
+                _playerManager._stats.IsEvent = true;
                 return false;
             }
             TextBox.instance.SetTalk(_textList1, false, _actorObjs[0].transform.position);

@@ -40,6 +40,7 @@ public class ActionS3 : ActionEvent
             if (TextBox.instance.isTalkEnd)
             {
                 TextBox.instance.isTalkEnd = false;
+                _playerManager._stats.IsEvent = true;
                 return false;
             }
             TextBox.instance.SetTalk(_textList1, false, _actorObjs[0].transform.position);
@@ -82,6 +83,7 @@ public class ActionS3 : ActionEvent
             if (TextBox.instance.isTalkEnd)
             {
                 TextBox.instance.isTalkEnd = false;
+                _playerManager._stats.IsEvent = true;
                 return false;
             }
             TextBox.instance.SetTalk(_textList2, false, _actorObjs[1].transform.position);
@@ -149,6 +151,7 @@ public class ActionS3 : ActionEvent
             if (TextBox.instance.isTalkEnd)
             {
                 TextBox.instance.isTalkEnd = false;
+                _playerManager._stats.IsEvent = true;
                 return false;
             }
             TextBox.instance.SetTalk(_textList3, false, _actorObjs[1].transform.position);
@@ -183,6 +186,7 @@ public class ActionS3 : ActionEvent
             if (TextBox.instance.isTalkEnd)
             {
                 TextBox.instance.isTalkEnd = false;
+                _playerManager._stats.IsEvent = true;
                 return false;
             }
             TextBox.instance.SetTalk(_textList4, false, _actorObjs[0].transform.position);
@@ -210,6 +214,7 @@ public class ActionS3 : ActionEvent
             if (TextBox.instance.isTalkEnd)
             {
                 TextBox.instance.isTalkEnd = false;
+                _playerManager._stats.IsEvent = true;
                 return false;
             }
             TextBox.instance.SetTalk(_textList5, false, _actorObjs[1].transform.position);

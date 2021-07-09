@@ -120,7 +120,7 @@ public class AI2 : AIMachine
             }
             _hurtDir = moveVec;
 
-            _attackCollider.GetComponent<BoxCollider2D>().offset = new Vector2(moveVec.x, 0);
+            //_attackCollider.GetComponent<BoxCollider2D>().offset = new Vector2(moveVec.x, 0);
 
             transform.position += moveVec * MyStats.MoveSpeed * Time.deltaTime;
         }
@@ -177,7 +177,8 @@ public class AI2 : AIMachine
         SoundPlayer.instance.PlaySound("Obj_dmg_on_2");
         SoundPlayer.instance.PlaySound("E2_dead");
 
-        _animtor.SetBool("isDead", true);
+        if (!_animtor.GetBool("isDead"))
+            _animtor.SetBool("isDead", true);
 
         StartCoroutine(EnemyErase(2.5f));
     }
@@ -199,7 +200,7 @@ public class AI2 : AIMachine
         var v = transform.position;
         v.y -= 0.8f;
 
-        _particleManager.ShowParticle(ParticleKind.Move, v, null, 20);
+        _particleManager.ShowParticle(ParticleKind.Dust, v, null, 1);
         _particleManager.ShowParticle(ParticleKind.Obs2, v, null, 2);
     }
 

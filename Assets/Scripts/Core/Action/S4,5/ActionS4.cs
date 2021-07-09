@@ -40,6 +40,7 @@ public class ActionS4 : ActionEvent
             if (TextBox.instance.isTalkEnd)
             {
                 TextBox.instance.isTalkEnd = false;
+                _playerManager._stats.IsEvent = true;
                 return false;
             }
             TextBox.instance._yesTalkList = _yesTextList;
@@ -63,6 +64,7 @@ public class ActionS4 : ActionEvent
                 if (TextBox.instance.isTalkEnd)
                 {
                     TextBox.instance.isTalkEnd = false;
+                    _playerManager._stats.IsEvent = true;
                     return false;
                 }
                 TextBox.instance.SetTalk(_textList2, false, _actorObjs[0].transform.position);
@@ -73,7 +75,7 @@ public class ActionS4 : ActionEvent
             return false;
         });
 
-        Delay(1.5f);
+        Delay(1f);
 
         AddAction(() =>
         {

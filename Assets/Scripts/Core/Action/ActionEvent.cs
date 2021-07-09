@@ -115,11 +115,13 @@ public class ActionEvent : MonoBehaviour
 
         _obj.GetComponent<Animator>().SetBool("isMove", true);
 
-        if (GameObject.FindGameObjectWithTag("Player").transform.localPosition.x < transform.position.x)
+        Debug.Log(GameObject.FindGameObjectWithTag("Player").transform.localPosition.x + " : " + _obj.transform.localPosition.x);
+        
+        if (GameObject.FindGameObjectWithTag("Player").transform.localPosition.x < _obj.transform.localPosition.x)
         {
             _obj.GetComponent<SpriteRenderer>().flipX = false;
         }
-        else if (GameObject.FindGameObjectWithTag("Player").transform.localPosition.x > transform.position.x)
+        else if (GameObject.FindGameObjectWithTag("Player").transform.localPosition.x > _obj.transform.localPosition.x)
         {
             _obj.GetComponent<SpriteRenderer>().flipX = true;
         }
@@ -127,16 +129,18 @@ public class ActionEvent : MonoBehaviour
 
         if (_obj != null)
         {
-            while (progress <= distance)
+
+            while (progress <= distance && _isStart)
             {
-                Debug.Log("Moving ...");
+                Debug.Log("Moving ... : " + distance);
 
                 _obj.transform.localPosition = Vector3.Lerp(_obj.transform.localPosition, _pos, _speed * Time.deltaTime);
                 progress += Time.deltaTime;
                 yield return null;
             }
         }
-        _obj.GetComponent<Animator>().SetBool("isMove", false);
+        if (_isStart)
+            _obj.GetComponent<Animator>().SetBool("isMove", false);
     }
 
     void Update()

@@ -27,6 +27,9 @@ public class AI : AIMachine
     [Inject]
     readonly ParticleManager _particleManager;
 
+    [Inject]
+    readonly PlayerManager _pm;
+
     protected sealed override void AISetting(ILog log)
     {
         _log = log.CreateLogger(this);
@@ -220,7 +223,8 @@ public class AI : AIMachine
             else
                 _renderer.flipX = true;
 
-            transform.position += _moveDir * MyStats.MoveSpeed * Time.deltaTime;
+            if (!_pm._stats.IsEvent)
+                transform.position += _moveDir * MyStats.MoveSpeed * Time.deltaTime;
 
             yield return null;
         }
@@ -233,7 +237,7 @@ public class AI : AIMachine
 
     IEnumerator AttackLogic()
     {
-        if (MyStats.IsAttack && !IsDead())
+        if (MyStats.IsAttack && !IsDead() && !_pm._stats.IsEvent)
         {
             yield return new WaitForSeconds(1f);
             _animtor.SetBool("isAttack", true);
@@ -242,8 +246,8 @@ public class AI : AIMachine
             SoundPlayer.instance.PlaySound("E1_atk");
             //_attackCollider.SetActive(false);
             yield return new WaitForSeconds(1.5f);
-            MyStats.IsAttack = false;
         }
+        MyStats.IsAttack = false;
     }
 
     IEnumerator BackPosition()
